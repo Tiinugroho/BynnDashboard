@@ -14,9 +14,9 @@
 
     <link rel="stylesheet" href="assets/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="assets/css/buttons.dataTables.min.css">
-
     <link rel="icon" type="image/x-icon" href="assets/icon/OIP.ico">
     <link rel="icon" type="image/png" href="assets/icon/logo.png">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -727,14 +727,50 @@
 
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.dataTables.min.js"></script>
+    <script defer src="assets/js/alpine.min.js"></script>
     <script src="assets/js/dataTables.buttons.min.js"></script>
     <script src="assets/js/jszip.min.js"></script>
     <script src="assets/js/pdfmake.min.js"></script>
     <script src="assets/js/vfs_fonts.js"></script>
     <script src="assets/js/buttons.html5.min.js"></script>
-    <script src="assets/js/tailwind.global.js"></script>
-    <script defer src="assets/js/alpine.min.js"></script>
-    <script src="assets/js/script.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var table = $('#recentApplicantsTable').DataTable({
+                responsive: true,
+                dom: 'lfrtip',
+                pageLength: 5,
+                lengthMenu: [
+                    [5, 10, 25, 50, -1],
+                    [5, 10, 25, 50, "All"]
+                ],
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Search records filter...",
+                    paginate: {
+                        next: '→',
+                        previous: '←'
+                    }
+                }
+            })
+            new $.fn.dataTable.Buttons(table, {
+                buttons: [{
+                        extend: 'excelHtml5'
+                    },
+                    {
+                        extend: 'pdfHtml5'
+                    }
+                ]
+            })
+            $('#exportExcelBtn').on('click', function() {
+                table.button('.buttons-excel').trigger();
+            })
+            $('#exportPdfBtn').on('click', function() {
+                table.button('.buttons-pdf').trigger();
+            })
+            table.buttons().container().appendTo('#dtButtonsContainer')
+        });
+    </script>
 </body>
 
 </html>
